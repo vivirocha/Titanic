@@ -1,7 +1,7 @@
 ################################################################################
 ###                                                                          ###
 ###                           Base de dados TITANIC                          ###
-###                                                                          ###
+###                              Random Forest                               ###
 ################################################################################
 
 install.packages("randomForest")
@@ -71,29 +71,66 @@ df$Sex <- as.factor(df$Sex)
 df$SibSp <- as.factor(df$SibSp)
 df$Parch <- as.factor(df$Parch)
 df$Embarked <- as.factor(df$Embarked)
-df$Parch <- as.factor(df$Parch)
 str(df)
+
+#Verificando a existência outliers
+summary(df)
+boxplot(df$SibSp, outline = TRUE)
+boxplot.stats(df$SibSp)
+
+boxplot(df$Age, outline = TRUE)
+
+min(df$Age)
+max(df$Age)
+
+boxplot.stats(df$Age)
+
+?boxplot.stats
+
+boxplot(df$Parch, outline = TRUE)
+boxplot(df$Fare, outline = TRUE)
+
+outlier(df)
+
+#Alterando a posição da coluna Survived
+library(dplyr)
+df <- df %>%
+  relocate(Survived, .after = Istrain)
+
+View(df)
+
 
 #Dividindo os dados entre treinamento e teste
 
 df_train <- df[df$Istrain == TRUE,]
 df_test <- df[df$Istrain == FALSE,]
 
+#Criando a equação e fórmula para rodar no randomForest
 
-#Criando a fórmula para rodar no randomForest
+equacao <- "Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked"
 
-form_df <- as.formula("Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked")
+formulatitanic <- as.formula(equacao)
+
+formulatitanic
+
+library(caret)
 
 #Criando o modelo randomForest
+modelo <- randomForest(formula = formulatitanic, 
+             data = df_train,
+             ntree = 500,
+             mtry = 3,
+             nodesize = 0.01 * nrow(df_test)
+             )
 
-modelo_df <- randomForest(formula = form_df,
-                          data = df_train,
-                          ntree = 30,
-                          importance = TRUE)
+modelo
 
-modelo_df
+equacao.features <- "Pclass + Sex + Age + SibSp + Parch + Fare + Embarked"
 
-importancia <- importance(modelo_df, type = 1)
+previsao <- predict(modelo, newdata = df_test)
 
-importancia
+PassengerId <- df_test$PassengerId
+output <- as.data.frame(PassengerId)
+output$Survived <- previsao
 
+write.csv(output, file = "submission.csv", row.names = FALSE)
