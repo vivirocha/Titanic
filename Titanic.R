@@ -7,14 +7,19 @@
 install.packages("randomForest")
 library(randomForest)
 library(dplyr)
+library(caTools)
+library(caret)
+library(dplyr)
 
 train <- read.csv("train.csv")
 test <- read.csv("test.csv")
 
 
+
 #Descobrindo o nome das variáveis
 colnames(train)
 colnames(test)
+
 
 #Apresentando um resumo dos dados
 summary(train)
@@ -30,6 +35,13 @@ test$Istrain <- FALSE
 #Unindo os dois datasets que conterão as 1309 observações.
 df <- rbind(train, test)
 
+#Excluindo colunas desnecessárias
+df$Name <- NULL
+df$Cabin <- NULL
+
+#Summary
+summary(df)
+
 #Apresentando o tipo de dados.
 str(df)
 
@@ -37,9 +49,6 @@ str(df)
 df$Sex[df$Sex=="male"] <- 0
 df$Sex[df$Sex=="female"] <- 1
 
-#Transformando os dados da variável Sex em inteiro.
-df$Sex <- as.factor(df$Sex)
-str(df)
 
 #verificando se existe valores nulos no nosso banco de dados - Como já tínhamos visto ao usar o summary.
 sum(is.null(df))
@@ -61,11 +70,18 @@ df$Embarked <- NULL
 
 colSums(is.na(df)) #Podemos ver 418 NA's em Survived (que nós inserimos), 263 em Age e 1 em Fare.Iremos tratar estes dados faltantes.
 
-#Inserindo a moda nos dados faltantes de Fare, como é apenas um dado faltante, irei utilizar a frequência para completar este dado.
-frequency(df$Fare, na.rm = TRUE)
-df$Fare = ifelse(is.na(df$Fare), frequency(df$Fare, na.rm = TRUE), df$Fare)
+# Preenchendo missing values de Fare com KNN
 
-summary(df)
+library(VIM)
+
+df <- kNN(df, variable = "Fare", k = 5)
+
+View(df)
+
+df$Fare_imp <- NULL
+
+colSums(is.na(df))
+
 
 #Transformando as variáveis em fator
 str(df)
@@ -78,9 +94,82 @@ df$EmbarkedC <- as.factor(df$EmbarkedC)
 df$EmbarkedQ <- as.factor(df$EmbarkedQ)
 str(df)
 
-#Excluindo colunas desnecessárias
-df$Name <- NULL
-df$Cabin <- NULL
+#escalonamento de Fare
+df$Fare <- scale(df$Fare)
+
+#Alterando a posição da coluna Age
+
+df <- df %>%
+  relocate(Age, .after = EmbarkedQ)
+
+View(df)
+  
+#Criando a equação e fórmula para rodar no randomForest
+
+equacaoAge <- "Age ~ Pclass + Sex + SibSp + Parch + Fare + EmbarkedS + EmbarkedC + EmbarkedQ"
+
+formulaAge <- as.formula(equacaoAge)
+
+formulaAge
+
+
+#Dividindo os dados entre treinamento e teste
+
+dftreinoAge <- df[!is.na(df$Age), ]
+dftesteAge <- df[is.na(df$Age), ]
+
+# df$Age[which(is.na(df$Age))] <- -1
+
+df$Fare_imp <- NULL
+
+set.seed(1523)
+
+#use 70% of dataset as training set and 30% as test set
+sample <- sample.split(df$Age, SplitRatio = 0.7)
+trainAge  <- subset(df, sample == TRUE)
+testAge   <- subset(df, sample == FALSE)
+
+
+
+#Criando o modelo para previsão de Age
+
+modeloAge <- randomForest(formula = formulaAge, 
+                       data = dftreinoAge,
+                       ntree = 80,
+                       mtry = 3,
+                       importance = TRUE,
+                       nodesize = 0.01 * nrow(dftesteAge)
+)
+
+modeloAge
+
+plot(modeloAge)
+
+#Fazendo a previsão do modelo Age
+previsaoAge <- predict(modeloAge, newdata = dftesteAge[-13])
+previsaoAge <- as.integer(previsaoAge)
+previsaoAge <- as.vector(previsaoAge)
+
+library(caret)
+#Avaliando o modelo
+matrizAge <- table(factor(previsaoAge,1), factor(dftesteAge$Age,1))
+confusionMatrix(matrizAge)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Alterando a posição da coluna Survived
 library(dplyr)
@@ -89,18 +178,6 @@ df <- df %>%
 
 View(df)
 
-# Preenchendo missing values com KNN
-
-install.packages("VIM")
-library(VIM)
-
-df <- kNN(df, variable = "Age", k = 5)
-
-View(df)
-
-df$Age_imp <- NULL
-
-colSums(is.na(df))
 
 
 #Verificando a existência outliers
