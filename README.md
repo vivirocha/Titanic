@@ -12,33 +12,36 @@ O conjunto de dados test.csv contém informações semelhantes, mas não revela 
 Usando os padrões encontrados nos dados train.csv, preveja se os outros 418 passageiros a bordo (encontrados em test.csv) sobreviveram.
 
 <b> Dicionário de dados </b><br>
-survival - Survival 	0 = No, 1 = Yes <br>
-pclass Ticket - class 	1 = 1st, 2 = 2nd, 3 = 3rd <br>
-sex -	Sex 	<br>
-Age - Age in years 	<br>
-sibsp - of siblings / spouses aboard the Titanic 	<br>
-parch - of parents / children aboard the Titanic 	<br>
-ticket - Ticket number 	<br>
-fare - Passenger fare 	<br>
-cabin - Cabin number 	<br>
-embarked - Port of Embarkation 	C = Cherbourg, Q = Queenstown, S = Southampton <br>
+<b>survival </b>- <i>Survival 	0 = No, 1 = Yes</i> <br>
+<b>pclass Ticket</b> - <i>class 	1 = 1st, 2 = 2nd, 3 = 3rd </i> <br>
+<b>sex </b>-	<i>Sex </i> 	<br>
+<b>Age</b> - <i>Age in years </i> 	<br>
+<b>sibsp</b> - <i>of siblings / spouses aboard the Titanic </i> 	<br>
+<b>parch </b>- <i>of parents / children aboard the Titanic </i> 	<br>
+<b>ticket</b> - <i>Ticket number </i> 	<br>
+<b>fare</b> - <i>Passenger fare </i> 	<br>
+<b>cabin</b> - <i>Cabin number </i> 	<br>
+<b>embarked</b> - <i>Port of Embarkation 	C = Cherbourg, Q = Queenstown, S = Southampton </i> <br>
 <br>
 <b> Notas </b> <br>
-pclass: Status socioeconomico <br>
-1st = Primeira classe <br>
-2nd = Segunda classe <br>
-3rd = Terceira classe <br>
+<b> pclass:</b> <i>Status socioeconomico </i> <br>
+<b> 1st =</b> <i>Primeira classe </i> <br>
+<b> 2nd =</b> <i>Segunda classe</i>  <br>
+<b> 3rd =</b></b> <i>Terceira classe </i> <br>
 
-age: A idade é fracionária se for menor que 1. Se a idade for estimada, ela está na forma de xx,5 <br>
+<b> age: </b><i>A idade é fracionária se for menor que 1. Se a idade for estimada, ela está na forma de xx,5 </i> </i> <br>
 
-sibsp: O conjunto de dados define as relações familiares desta forma... <br>
-Sibling = irmão, irmã, meio-irmão, meia-irmã <br>
-Spouse = marido, esposa (amantes e noivos foram ignorados) <br>
+<b> sibsp:</b> <i>O conjunto de dados define as relações familiares desta forma. </i> <br>
+<b> Sibling = </b><i>irmão, irmã, meio-irmão, meia-irmã </i> </i> <br>
+<b> Spouse =</b> <i>marido, esposa (amantes e noivos foram ignorados) </i> <br>
 
-parch: O conjunto de dados define as relações familiares desta forma... <br>
-Parent = mãe, pai <br>
-Child = filha, filho, enteada, enteado <br>
-Algumas crianças viajaram apenas com uma babá, portanto parch=0 para elas. <br>
+<b> parch:</b><i> O conjunto de dados define as relações familiares desta forma.</i> <br>
+<b> Parent = </b><i>mãe, pai </i> <br>
+<b> Child = </b><i>filha, filho, enteada, enteado </i> <br>
+<i>Algumas crianças viajaram apenas com uma babá, portanto parch=0 para elas. </i> <br>
+
+## Resolução
+Abaixo consta algumas técnicas utilizadas para resolver este desafio, cada uma com a sua particulariedade e como pode-se observar, umas que funcionaram melhores do que as outras.  No item 8 consta o código que me rendeu a posição 828 na competição (dentre 15.571 competidores - na data de 31/03/2023). Poderia ter continuado aperfeiçoando para chegar a uma posição melhor, porém para mim estar dentre os primeiros mil é algo super significativo. <br>
 
 1 [Titanic utilizando média](https://github.com/vivirocha/Titanic/blob/main/ApenasMedia.R) <br> 
 2 [Titanic com Escalonamento](https://github.com/vivirocha/Titanic/blob/main/EscalonamentoDeTudo.R) <br>
@@ -47,4 +50,9 @@ Algumas crianças viajaram apenas com uma babá, portanto parch=0 para elas. <br
 5 [Titanic com Mediana e kNN](https://github.com/vivirocha/Titanic/blob/main/MEDIANA%20EM%20FARE%20E%20kNN%20em%20AGE.R) <br>
 6 [Titanic com Outliers e Escalonamento](https://github.com/vivirocha/Titanic/blob/main/Mesclagem%20de%20outliers%20e%20escalonamento%20de%20tudo.R) <br>
 7 [Titanic com Outliers](https://github.com/vivirocha/Titanic/blob/main/Outliers.R) <br>
+8 [SCORE 0.79186](https://github.com/vivirocha/Titanic/blob/main/Titanic-Final.R) <br>
+<br>
+A seguir consta as análises realizadas referente a este dataset.
+
+
  
