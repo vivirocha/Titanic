@@ -1,5 +1,6 @@
 # Titanic-R / Kaggle
 
-1.0 [Titanic com Random Forest](https://github.com/vivirocha/Kaggle-R/blob/main/Titanic.R) <br> 
-  1.1 [Titanic com SVM](https://github.com/vivirocha/Kaggle-R/blob/main/SVM.R)
+1 [Titanic utilizando média](https://github.com/vivirocha/Titanic/blob/main/ApenasMedia.R) <br> 
+2 [Titanic com Escalonamento](https://github.com/vivirocha/Titanic/blob/main/EscalonamentoDeTudo.R) <br>
+3 [Titanic com SVM](https://github.com/vivirocha/Titanic/blob/main/SVM.R) <br>
  
