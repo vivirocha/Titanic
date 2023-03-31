@@ -1,3 +1,5 @@
+###################### MEDIANA EM FARE E kNN em AGE
+
 library(randomForest)
 library(dplyr)
 library(caTools)
@@ -19,21 +21,20 @@ df <- rbind(train, test)
 df$Name <- NULL
 df$Ticket <- NULL
 df$Cabin <- NULL
+df$Parch <- NULL
 
 colSums(is.na(df))
 
 df$Sex[df$Sex=="male"] <- 0
 df$Sex[df$Sex=="female"] <- 1
 
-# Preenchendo missing values de Fare com KNN
+summary(df$Fare)
 
-df <- kNN(df, variable = "Fare", k = 2)
-
-df$Fare_imp <- NULL
+df$Fare[which(is.na(df$Fare))] <- 33.295
 
 colSums(is.na(df))
 
-df <- kNN(df, variable = "Age", k = 2)
+df <- kNN(df, variable = "Age", k = 70)
 
 df$Age_imp <- NULL
 
@@ -56,11 +57,9 @@ colSums(is.na(df))
 
 #escalonamento de Fare e Pclass
 df$Fare <- scale(df$Fare)
-df$PassengerId <- scale(df$PassengerId)
 df$Pclass <- scale(df$Pclass)
 df$Age <- scale(df$Age)
 df$SibSp <- scale(df$SibSp)
-df$Parch <- scale(df$Parch)
 df$Sex <- as.numeric(df$Sex)
 df$Sex <- scale(df$Sex)
 df$Embarked <- as.numeric(df$Embarked)
@@ -73,7 +72,7 @@ df <- df %>%
 
 colnames(df)
 #Criando a equação e fórmula para rodar no randomForest
-equacao <- "Survived ~ Pclass + Sex + Age+ SibSp + Parch + Fare + Embarked"
+equacao <- "Survived ~ Pclass + Sex + Age+ SibSp + Fare + Embarked"
 formula <- as.formula(equacao)
 
 df$Survived <- as.factor(df$Survived)
@@ -84,16 +83,20 @@ df_test <- df[df$Istrain == FALSE,]
 set.seed(10)
 modelo <- randomForest(formula = formula, 
                        data = df_train,
-                       ntree = 120,
-                       maxnodes = 105,
-                       mtry = 3,
+                       ntree = 100,
+                       mtry = 2,
                        importance = TRUE,
-                       nodesize = 0.01 * nrow(df_test))
+                       nodesize = 0.01 * nrow(df_test),
+                       n_jobs = -1,
+                       na.action=na.omit,
+                       weights=NULL,
+                       replace=TRUE, 
+                       maxnodes = 120,
+                       type = 'regression')
 
 modelo
 
 plot(modelo)
-
 
 #Gerando matriz de importância
 importancia <- importance(modelo, type = 1)

@@ -84,8 +84,7 @@ df_test <- df[df$Istrain == FALSE,]
 set.seed(10)
 modelo <- randomForest(formula = formula, 
                        data = df_train,
-                       ntree = 120,
-                       maxnodes = 105,
+                       ntree = 60,
                        mtry = 3,
                        importance = TRUE,
                        nodesize = 0.01 * nrow(df_test))
@@ -112,4 +111,3 @@ submission <- data.frame(PassengerId = 892:1309,
 #Finalizando o trabalho
 
 write.csv(submission, file = "submission.csv", row.names = FALSE)
-

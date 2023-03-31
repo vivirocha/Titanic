@@ -111,4 +111,4 @@ submission <- data.frame(PassengerId = 892:1309,
 
 
 #Finalizando o trabalho
-write.csv(submission, file = "submission.csv", row.names = FALSE)
+write.csv(submission, file = "submission1.csv", row.names = FALSE)
