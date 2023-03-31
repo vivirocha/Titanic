@@ -54,5 +54,6 @@ Abaixo consta algumas técnicas utilizadas para resolver este desafio, cada uma 
 <br>
 A seguir consta as análises realizadas referente a este dataset.
 
+## Gráfico 1
 
- 
+
